@@ -33,7 +33,7 @@ const DataView = () => {
   const [isGlossaryOpen, setIsGlossaryOpen] = useState(false);
 
   return (
-    <div className="pt-32 px-6 sm:px-10 pb-16 bg-beige min-h-screen animate-fadeIn">
+    <div className="pt-52 px-6 sm:px-10 pb-16 bg-beige min-h-screen animate-fadeIn">
       <div className="max-w-7xl mx-auto">
         <FilterControls />
 
