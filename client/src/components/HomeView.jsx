@@ -41,7 +41,7 @@ const Typewriter = () => {
 
   return (
     <div className="min-h-[90px] sm:min-h-[110px] lg:min-h-[130px] flex items-center">
-      <span className="font-lobster text-4xl sm:text-4xl lg:text-7xl font-extrabold uppercase tracking-tighter text-red-950">
+      <span className="font-lobster text-4xl sm:text-4xl lg:text-7xl font-extrabold uppercase tracking-wider text-red-950">
         {currentText}
       </span>
       <BlinkingCursor />
@@ -134,6 +134,7 @@ const HomeView = () => {
           ))}
         </div>
       </section>
+      
       <DataView />
     </Fragment>
   );

@@ -42,7 +42,9 @@ const translations = {
     def_familiesGotWork: "Total number of families (households) that received work under the scheme.",
     def_totalMoneySpent: "Total amount (in Lakhs) spent on all works and wages.",
     def_workdaysForWomen: "Total number of days worked by women.",
-    def_salariesOnTime: "Percentage of salary payments made within 15 days of work."
+    def_salariesOnTime: "Percentage of salary payments made within 15 days of work.",
+    chartTitleWorks: "Top 12 Districts by Work Completed",
+    chartTitleExpenditure: "Top 12 Districts by Money Spent",
   },
   mr: {
     language: "मराठी",
@@ -84,7 +86,9 @@ const translations = {
     def_familiesGotWork: "योजनेअंतर्गत काम मिळालेल्या कुटुंबांची (घरांची) एकूण संख्या.",
     def_totalMoneySpent: "सर्व कामांवर आणि मजुरीवर खर्च केलेली एकूण रक्कम (लाखांमध्ये).",
     def_workdaysForWomen: "महिलांनी काम केलेल्या दिवसांची एकूण संख्या.",
-    def_salariesOnTime: "काम केल्यापासून १५ दिवसांच्या आत दिलेल्या पगाराची टक्केवारी."
+    def_salariesOnTime: "काम केल्यापासून १५ दिवसांच्या आत दिलेल्या पगाराची टक्केवारी.",
+    chartTitleWorks: "काम पूर्ण केल्यानुसार शीर्ष 12 जिल्हे",
+    chartTitleExpenditure: "खर्च केलेल्या पैशानुसार शीर्ष 12 जिल्हे",
   }
 };
 

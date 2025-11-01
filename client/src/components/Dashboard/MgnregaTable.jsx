@@ -2,6 +2,15 @@ import React from "react";
 import { useMgnregaData } from "../../context/DataContext";
 import { formatCurrencyLakh, formatNumber, formatPercent } from "../../utils/formatters";
 
+
+const getRowPerformance = (percent) => {
+  const p = parseFloat(percent);
+  if (p < 90) return 'bg-red-500/10'; // Red for poor
+  if (p >= 90 && p < 100) return 'bg-yellow-400/10'; // Yellow for average
+  if (p >= 100) return 'bg-green-500/10'; // Green for good
+  return 'hover:bg-black/5'; // Default
+};
+
 const MgnregaTable = () => {
   const { data, loading, error } = useMgnregaData();
 
@@ -9,35 +18,40 @@ const MgnregaTable = () => {
   if (error) return <p className="text-red-600 mt-6 font-bold">{error}</p>;
 
   return (
-  <div className="mt-10 animate-fadeIn">
-    <div className="w-full overflow-x-auto">
-      <table className="min-w-[900px] w-full text-base text-black rounded-2xl border-2 border-black/20 bg-beige">
-        <thead className="uppercase text-sm">
-          <tr>
-            <th className="sticky top-0 z-20 bg-black text-beige py-4 px-6 text-left shadow-lg font-bold">District</th>
-            <th className="sticky top-0 z-20 bg-black text-beige py-4 px-6 text-right shadow-lg font-bold">Completed Works</th>
-            <th className="sticky top-0 z-20 bg-black text-beige py-4 px-6 text-right shadow-lg font-bold">Households Worked</th>
-            <th className="sticky top-0 z-20 bg-black text-beige py-4 px-6 text-right shadow-lg font-bold">Women Persondays</th>
-            <th className="sticky top-0 z-20 bg-black text-beige py-4 px-6 text-right shadow-lg font-bold">Total Expenditure</th>
-            <th className="sticky top-0 z-20 bg-black text-beige py-4 px-6 text-right shadow-lg font-bold">Wage % within 15d</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row, i) => (
-            <tr key={`${row.district_code}-${i}`} className="border-t border-black/20 hover:bg-black/5 font-bold">
-              <td className="py-4 px-6">{row.district_name}</td>
-              <td className="py-4 px-6 text-right">{formatNumber(row.Number_of_Completed_Works)}</td>
-              <td className="py-4 px-6 text-right">{formatNumber(row.Total_Households_Worked)}</td>
-              <td className="py-4 px-6 text-right">{formatNumber(row.Women_Persondays)}</td>
-              <td className="py-4 px-6 text-right">{formatCurrencyLakh(row.Total_Exp)}</td>
-              <td className="py-4 px-6 text-right">{formatPercent(row.percentage_payments_gererated_within_15_days)}</td>
+    <div className="mt-10 animate-fadeIn">
+      <div className="w-full overflow-x-auto">
+        <table className="min-w-[900px] w-full text-base text-black rounded-2xl border-2 border-black/20 bg-beige">
+          <thead className="uppercase text-sm">
+            <tr>
+              <th className="sticky top-0 z-20 bg-black text-beige py-4 px-6 text-left shadow-lg font-bold">District</th>
+              <th className="sticky top-0 z-20 bg-black text-beige py-4 px-6 text-left shadow-lg font-bold">Month</th>
+              <th className="sticky top-0 z-20 bg-black text-beige py-4 px-6 text-right shadow-lg font-bold">Completed Works</th>
+              <th className="sticky top-0 z-20 bg-black text-beige py-4 px-6 text-right shadow-lg font-bold">Households Worked</th>
+              <th className="sticky top-0 z-20 bg-black text-beige py-4 px-6 text-right shadow-lg font-bold">Women Persondays</th>
+              <th className="sticky top-0 z-20 bg-black text-beige py-4 px-6 text-right shadow-lg font-bold">Total Expenditure</th>
+              <th className="sticky top-0 z-20 bg-black text-beige py-4 px-6 text-right shadow-lg font-bold">Wage % within 15d</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.map((row, i) => {
+              const rowColor = getRowPerformance(row.percentage_payments_gererated_within_15_days);
+
+              return (
+                <tr key={`${row.district_code}-${i}`} className={`border-t border-black/20 hover:bg-black/5 font-bold ${rowColor}`}>
+                  <td className="py-4 px-6">{row.district_name}</td>
+                  <td className="py-4 px-6 whitespace-nowrap">{row.month}</td>
+                  <td className="py-4 px-6 text-right">{formatNumber(row.Number_of_Completed_Works)}</td>
+                  <td className="py-4 px-6 text-right">{formatNumber(row.Total_Households_Worked)}</td>
+                  <td className="py-4 px-6 text-right">{formatNumber(row.Women_Persondays)}</td>
+                  <td className="py-4 px-6 text-right">{formatCurrencyLakh(row.Total_Exp)}</td>
+                  <td className="py-4 px-6 text-right">{formatPercent(row.percentage_payments_gererated_within_15_days)}</td>
+                </tr>
+              )})}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-);
+  );
 
 };
 
