@@ -80,7 +80,8 @@ const KPICards = () => {
     setTtsErrorKey(null); // Clear previous errors
     try {
       const textToSpeak = `${metric.label}: ${metric.value}`;
-      const langCode = language === 'mr' ? 'mr' : 'en-US'; 
+      // UPDATED: Use 'mr-IN' for Marathi
+      const langCode = language === 'mr' ? 'mr-IN' : 'en-US'; 
       await speak(textToSpeak, langCode); 
     } catch (error) {
       console.error("TTS failed for card:", metric.key, error);
@@ -124,4 +125,3 @@ const KPICards = () => {
 };
 
 export default KPICards;
-

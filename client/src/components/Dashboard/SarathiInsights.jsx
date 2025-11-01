@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useMgnregaData } from '../../context/DataContext';
+import { useTTS } from '../../hooks/useTTS'; // <-- IMPORTED
 
 async function fetchWithBackoff(url, options, retries = 3, delay = 1000) {
   try {
@@ -22,6 +23,28 @@ async function fetchWithBackoff(url, options, retries = 3, delay = 1000) {
   }
 }
 
+// --- ADDED ICONS ---
+const PlayIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+  </svg>
+);
+
+const LoadingSpinner = () => (
+  <svg className="w-5 h-5 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+  </svg>
+);
+
+const ErrorIcon = () => (
+  <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+  </svg>
+);
+// --- END ICONS ---
+
 const SarathiInsights = ({ isOpen, onClose }) => {
   const { data, filters, total } = useMgnregaData();
   const [isLoading, setIsLoading] = useState(false);
@@ -29,10 +52,15 @@ const SarathiInsights = ({ isOpen, onClose }) => {
   const [insights, setInsights] = useState("");
   const [language, setLanguage] = useState('English');
 
+  // --- ADDED TTS STATE AND HOOK ---
+  const { speak, stop: stopTTS, isLoading: isTtsLoading } = useTTS();
+  const [ttsError, setTtsError] = useState(null);
+
   const generateInsights = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     setInsights("");
+    stopTTS(); // Stop any previous speech
 
     const systemPrompt = `
       You are an expert data analyst named "Sarathi," specializing in Indian government schemes.
@@ -92,9 +120,36 @@ const SarathiInsights = ({ isOpen, onClose }) => {
       setIsLoading(false);
     }
 
-  }, [data, filters, total, language]);
+  }, [data, filters, total, language, stopTTS]); // Added stopTTS dependency
 
   if (!isOpen) return null;
+
+  // --- ADDED TTS HANDLERS ---
+  const handleClose = () => {
+    stopTTS(); // Stop audio on close
+    onClose();
+  };
+
+  const handleSpeakInsights = async () => {
+    if (!insights) return;
+    setTtsError(null);
+
+    let langCode = 'en-US'; // Default
+    if (language === 'Marathi') {
+      langCode = 'mr-IN';
+    } else if (language === 'Hindi') {
+      langCode = 'hi-IN';
+    }
+
+    try {
+      await speak(insights, langCode);
+    } catch (err) {
+      console.error("TTS failed for Sarathi:", err);
+      setTtsError("Sorry, could not play audio.");
+      setTimeout(() => setTtsError(null), 3000); // Clear error after 3s
+    }
+  };
+  // --- END TTS HANDLERS ---
 
   const languageOptions = [
     { value: 'English', label: 'English' },
@@ -103,9 +158,11 @@ const SarathiInsights = ({ isOpen, onClose }) => {
   ];
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fadeIn" onClick={onClose}>
+    // UPDATED: Added handleClose
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fadeIn" onClick={handleClose}>
       <div className="relative bg-beige w-full max-w-2xl p-6 rounded-2xl shadow-lg border-2 border-black/20 m-4" onClick={(e) => e.stopPropagation()}>
-        <button onClick={onClose} className="absolute top-4 right-4 text-black hover:text-black/70 text-2xl font-bold">
+        {/* UPDATED: Added handleClose */}
+        <button onClick={handleClose} className="absolute top-4 right-4 text-black hover:text-black/70 text-2xl font-bold">
           &times;
         </button>
 
@@ -130,7 +187,20 @@ const SarathiInsights = ({ isOpen, onClose }) => {
           {isLoading ? "Analyzing..." : "Generate Insights"}
         </button>
 
-        <div className="mt-4 min-h-[200px] max-h-[50vh] overflow-y-auto p-4 bg-white/50 rounded-lg border-2 border-black/10">
+        {/* --- UPDATED: Added relative class and TTS button --- */}
+        <div className="relative mt-4 min-h-[200px] max-h-[50vh] overflow-y-auto p-4 bg-white/50 rounded-lg border-2 border-black/10">
+          
+          {insights && !isLoading && (
+            <button
+              onClick={handleSpeakInsights}
+              className="absolute top-2 right-2 p-1 text-black hover:text-black/70 disabled:opacity-50"
+              title="Read insights aloud"
+              disabled={isTtsLoading}
+            >
+              {ttsError ? <ErrorIcon /> : isTtsLoading ? <LoadingSpinner /> : <PlayIcon />}
+            </button>
+          )}
+
           {isLoading && (
             <div className="flex flex-col items-center justify-center h-full">
               <div className="w-12 h-12 border-4 border-black/20 border-t-black rounded-full animate-spin" />
@@ -139,7 +209,8 @@ const SarathiInsights = ({ isOpen, onClose }) => {
           )}
           {error && <div className="text-red-600 p-4">{error}</div>}
           {insights && !isLoading && (
-            <pre className="text-black whitespace-pre-wrap">
+            // Added pr-8 for button spacing
+            <pre className="text-black whitespace-pre-wrap pr-8">
               {insights}
             </pre>
           )}
@@ -149,6 +220,8 @@ const SarathiInsights = ({ isOpen, onClose }) => {
             </p>
           )}
         </div>
+        {/* --- END UPDATES --- */}
+
       </div>
     </div>
   );

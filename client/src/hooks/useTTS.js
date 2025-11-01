@@ -48,21 +48,30 @@ function writeString(view, offset, string) {
     view.setUint8(offset + i, string.charCodeAt(i));
   }
 }
-async function fetchTTSWithBackoff(url, options, retries = 3, delay = 1000) {
+
+// UPDATED: fetchTTSWithBackoff now accepts full options object
+async function fetchTTSWithBackoff(url, options, retries = 3, delay = 2000) { // Increased initial delay to 2s
   try {
     const response = await fetch(url, options);
     if (!response.ok) {
       if (response.status === 429 && retries > 0) {
+        // 429 error, wait and retry
         await new Promise(res => setTimeout(res, delay));
-        return fetchTTSWithBackoff(url, options, retries - 1, delay * 2);
+        return fetchTTSWithBackoff(url, options, retries - 1, delay * 2.5); // Increased backoff multiplier
       }
       throw new Error(`TTS API Error: ${response.statusText}`);
     }
     return response.json();
   } catch (error) {
+    // NEW: Check for AbortError
+    if (error.name === 'AbortError') {
+      console.log("TTS fetch aborted by user.");
+      return null; // Don't throw an error, just stop
+    }
+    // Retry on general fetch error (e.g., network issue)
     if (retries > 0) {
       await new Promise(res => setTimeout(res, delay));
-      return fetchTTSWithBackoff(url, options, retries - 1, delay * 2);
+      return fetchTTSWithBackoff(url, options, retries - 1, delay * 2.5);
     }
     console.error("TTS fetch failed after retries:", error);
     throw error;
@@ -76,9 +85,11 @@ export const useTTS = () => {
   const [error, setError] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
   const [currentAudio, setCurrentAudio] = useState(null);
+  // NEW: State for AbortController
+  const [abortController, setAbortController] = useState(null);
 
-  // Stop any currently playing audio
-  const stop = () => {
+  // Stop any currently playing audio AND abort in-flight fetch
+  const stop = useCallback(() => {
     if (currentAudio) {
       currentAudio.pause();
       currentAudio.currentTime = 0;
@@ -88,18 +99,22 @@ export const useTTS = () => {
       URL.revokeObjectURL(audioUrl);
       setAudioUrl(null);
     }
-  };
+    // NEW: Abort the previous fetch request
+    if (abortController) {
+      abortController.abort();
+      setAbortController(null);
+    }
+  }, [currentAudio, audioUrl, abortController]); // Added abortController dependency
 
   const speak = useCallback(async (text, languageCode) => {
-    stop(); // Stop previous audio
+    stop(); // This will now also abort previous fetches
     setIsLoading(true);
     setError(null);
 
-    // This is the API key for the Gemini API.
-    // In many environments, this is injected automatically when left blank.
-    // If it fails, it needs to be provided via a .env variable.
-    // We will use the VITE_GEMINI_API_KEY from your .env file.
-    // PLEASE ADD a VITE_GEMINI_API_KEY to your .env file.
+    // NEW: Create a new controller for this request
+    const controller = new AbortController();
+    setAbortController(controller);
+
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY || ""; 
     
     if (!apiKey) {
@@ -112,12 +127,15 @@ export const useTTS = () => {
 
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
 
-    const voice = languageCode === 'mr' ? 'Kore' : 'Puck';
+    let voice = 'Puck'; // Default English (en-US)
+    if (languageCode === 'mr-IN') {
+      voice = 'Kore'; // Marathi
+    } else if (languageCode === 'hi-IN') {
+      voice = 'Chitra'; // Hindi
+    }
 
     const payload = {
       contents: [{
-        // FIX: Simplified the text payload.
-        // The "Say in a..." instruction can sometimes cause a 400 error.
         parts: [{ text: text }] 
       }],
       generationConfig: {
@@ -131,12 +149,23 @@ export const useTTS = () => {
       model: "gemini-2.5-flash-preview-tts"
     };
 
+    // NEW: Define fetch options, including the signal
+    const fetchOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: controller.signal // Pass the signal
+    };
+
     try {
-      const result = await fetchTTSWithBackoff(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      // Pass the fetchOptions to the backoff function
+      const result = await fetchTTSWithBackoff(apiUrl, fetchOptions);
+
+      // NEW: If result is null, it was aborted, so just stop
+      if (!result) {
+         setIsLoading(false);
+         return;
+      }
 
       const part = result?.candidates?.[0]?.content?.parts?.[0];
       const audioData = part?.inlineData?.data;
@@ -160,15 +189,20 @@ export const useTTS = () => {
       }
 
     } catch (err) {
-      console.error("TTS Generation Error:", err);
-      setError("Sorry, could not play audio.");
-      throw err; // Re-throw the error so the component can catch it
+      // Don't set error if it was an abort
+      if (err.name !== 'AbortError') {
+        console.error("TTS Generation Error:", err);
+        setError("Sorry, could not play audio.");
+        throw err; // Re-throw the error so the component can catch it
+      }
     } finally {
       setIsLoading(false);
+      // Clear the controller only if it's the one we created
+      if (abortController === controller) {
+        setAbortController(null);
+      }
     }
-  }, [currentAudio, audioUrl]); // Dependencies for useCallback
+  }, [stop]); // 'stop' is now the only dependency needed
 
   return { speak, stop, isLoading, error };
 };
-
-    
