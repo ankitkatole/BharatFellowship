@@ -41,7 +41,7 @@ const Typewriter = () => {
 
   return (
     <div className="min-h-[90px] sm:min-h-[110px] lg:min-h-[130px] flex items-center">
-      <span className="font-momo text-4xl sm:text-4xl lg:text-7xl font-extrabold uppercase tracking-tighter text-red-950">
+      <span className="font-lobster text-4xl sm:text-4xl lg:text-7xl font-extrabold uppercase tracking-tighter text-red-950">
         {currentText}
       </span>
       <BlinkingCursor />
@@ -58,7 +58,7 @@ const HomeView = () => {
       <div className="relative h-screen w-full flex items-center justify-center overflow-hidden text-black pt-24 animate-fadeIn">
 
         {/* background image */}
-        <div className="absolute inset-0 bg-[url('/src/assets/bagImage.png')] bg-center bg-cover opacity-50"></div>
+        <div className="absolute inset-0 bg-[url('/src/assets/bagImage.png')] bg-center bg-cover opacity-20"></div>
 
         {/* blur blobs */}
         <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-black/5 rounded-full filter blur-[160px] opacity-30 animate-pulse"></div>

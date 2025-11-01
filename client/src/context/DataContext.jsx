@@ -52,6 +52,7 @@ export const MgnregaDataProvider = ({ children }) => {
     year: "2024-2025",
     district: "",
   });
+  const [detectedDistrict, setDetectedDistrict] = useState("");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -128,6 +129,7 @@ export const MgnregaDataProvider = ({ children }) => {
           if (!cleaned || cleaned.length < 2) return;
           const candidateState = (address.state || "").toUpperCase();
           if (candidateState && ALL_STATES.includes(candidateState)) {
+            setDetectedDistrict(cleaned);
             setFilters((prev) => ({
               ...prev,
               state: candidateState,
@@ -135,12 +137,14 @@ export const MgnregaDataProvider = ({ children }) => {
             }));
             setOffset(0);
           } else if (ALL_STATES.includes(filters.state)) {
+            setDetectedDistrict(cleaned);
             setFilters((prev) => ({
               ...prev,
               district: cleaned,
             }));
             setOffset(0);
           } else {
+            setDetectedDistrict(cleaned);
             setFilters((prev) => ({ ...prev, district: cleaned }));
             setOffset(0);
           }
@@ -163,6 +167,7 @@ export const MgnregaDataProvider = ({ children }) => {
       setOffset,
       total,
       geoSupported,
+      detectedDistrict,
     }}>
       {children}
     </DataContext.Provider>
