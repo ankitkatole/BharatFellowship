@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { useMgnregaData } from "../context/DataContext";
-import { useLanguage } from "../context/LanguageContext"; // Import language hook
+import { useLanguage } from "../context/LanguageContext"; 
 import FilterControls from "./Dashboard/FilterControls";
 import KPICards from "./Dashboard/KPICards";
-import ColorLegend from "./Dashboard/ColorLegend"; // <-- IMPORTED THE NEW LEGEND
+import ColorLegend from "./Dashboard/ColorLegend"; 
 import MgnregaChart from "./Dashboard/MgnregaChart";
 import MgnregaTable from "./Dashboard/MgnregaTable";
 import ExpenditureChart from "./Dashboard/ExpenditureChart";
 import LoadingOverlay from "./LoadingOverlay";
 import SarathiInsights from "./Dashboard/SarathiInsights";
-import Glossary from "./Dashboard/Glossary"; // Import Glossary component
+import Glossary from "./Dashboard/Glossary"; 
 
-// Simple SVG Icon for Glossary/Book
 const BookIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
     <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.234-.124 2.502.124 3.612.421.114.03.114.17 0 .2L8 3.21l-.008.004-.002.001-.002.001-.003.001h-.001a.009.009 0 0 1-.001 0l-.002-.001-.003-.001-.002-.001-.008-.004c-1.11-.297-2.378-.545-3.612-.421C2.154 2.06 1.885 2.458 1 2.828zM1.01 4.14c.882-.37 2.154-.769 3.388-.894 1.234-.124 2.502.124 3.612.421.114.03.114.17 0 .2L8 4.21l-.008.004-.002.001-.002.001-.003.001h-.001a.009.009 0 0 1-.001 0l-.002-.001-.003-.001-.002-.001-.008-.004c-1.11-.297-2.378-.545-3.612-.421C2.154 3.37 1.885 3.77 1.01 4.14zM16 8c0 1.105-1.12 2-2.5 2S11 9.105 11 8s1.12-2 2.5-2 2.5.895 2.5 2zM15 8a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0z"/>
@@ -19,7 +18,6 @@ const BookIcon = () => (
   </svg>
 );
 
-// Simple SVG Icon for AI/Sparkles
 const SparkleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
     <path d="M8 0a1 1 0 0 1 1 1v2.069a1 1 0 0 1-2 0V1a1 1 0 0 1 1-1zM4.64 1.64a1 1 0 0 1 1.414 0l1.06 1.06a1 1 0 0 1-1.413 1.414L4.64 3.053a1 1 0 0 1 0-1.414zM1.64 4.64a1 1 0 0 1 0 1.414l1.06 1.06a1 1 0 0 1 1.414-1.413L3.053 4.64a1 1 0 0 1-1.414 0zM0 8a1 1 0 0 1 1-1h2.069a1 1 0 0 1 0 2H1a1 1 0 0 1-1-1zm1.64 3.36a1 1 0 0 1 0-1.414l1.06-1.06a1 1 0 0 1 1.413 1.414L3.053 11.36a1 1 0 0 1-1.414 0zM4.64 14.36a1 1 0 0 1 1.414 0l1.06-1.06a1 1 0 0 1-1.413-1.414L4.64 12.947a1 1 0 0 1 0 1.414zM8 12a1 1 0 0 1 1 1v2.069a1 1 0 0 1-2 0V13a1 1 0 0 1 1-1zm3.36-1.64a1 1 0 0 1 1.414 0l1.06 1.06a1 1 0 0 1-1.414 1.413l-1.06-1.06a1 1 0 0 1 0-1.414zm3-3a1 1 0 0 1 0 1.414l-1.06 1.06a1 1 0 0 1-1.414-1.413l1.06-1.06a1 1 0 0 1 1.414 0zM14.36 4.64a1 1 0 0 1 0-1.414l-1.06-1.06a1 1 0 0 1-1.414 1.414l1.06 1.06a1 1 0 0 1 1.414 0z"/>

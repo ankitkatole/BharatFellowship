@@ -1,7 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 
-// Simple SVG Icon for the "X" button
 const CloseIcon = () => (
   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -13,7 +12,6 @@ const Glossary = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  // List of terms to define
   const terms = [
     { key: 'worksCompleted', title: t('worksCompleted'), definition: t('def_worksCompleted') },
     { key: 'familiesGotWork', title: t('familiesGotWork'), definition: t('def_familiesGotWork') },
@@ -23,15 +21,13 @@ const Glossary = ({ isOpen, onClose }) => {
   ];
 
   return (
-    // Modal Overlay
     <div 
       className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fadeIn"
       onClick={onClose}
     >
-      {/* Modal Content */}
       <div
         className="relative bg-beige w-full max-w-2xl p-6 rounded-2xl shadow-lg border-2 border-black/20 m-4"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+        onClick={(e) => e.stopPropagation()}
       >
         <button 
           onClick={onClose}
@@ -45,7 +41,6 @@ const Glossary = ({ isOpen, onClose }) => {
         </h2>
 
         <div className="max-h-[60vh] overflow-y-auto pr-2 space-y-4">
-          {/* --- NEW: Color Legend --- */}
           <div className="p-4 bg-white/50 rounded-lg border-2 border-black/10">
             <h3 className="text-xl font-momo text-black">{t('colorLegendTitle')}</h3>
             <ul className="list-none mt-2 space-y-1 font-bold">
@@ -63,7 +58,6 @@ const Glossary = ({ isOpen, onClose }) => {
               </li>
             </ul>
           </div>
-          {/* --- End Color Legend --- */}
 
           {terms.map(term => (
             <div key={term.key} className="p-4 bg-white/50 rounded-lg border-2 border-black/10">

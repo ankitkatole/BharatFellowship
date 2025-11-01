@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useMgnregaData } from "../../context/DataContext";
-import { useLanguage } from "../../context/LanguageContext"; // Import language hook
+import { useLanguage } from "../../context/LanguageContext"; 
 
 const ExpenditureChart = () => {
   const { data } = useMgnregaData();
-  const { t } = useLanguage(); // Get translation function
+  const { t } = useLanguage(); 
 
   const chartData = useMemo(() => {
     return data.map((d, i) => ({
