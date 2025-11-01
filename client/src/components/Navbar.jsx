@@ -11,7 +11,7 @@ const Navbar = () => {
           <Link to="/" className="flex items-center gap-3 animate-fadeIn">
             <img src="navbar.png" className="h-16 w-16 rounded-lg" alt="Logo" />
             <span className="font-momo text-3xl text-black">
-              MGNREGA Districtwise Dashboard
+              MGNREGA Data Dashboard
             </span>
           </Link>
 
