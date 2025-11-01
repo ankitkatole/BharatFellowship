@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 const DataContext = createContext();
 
 const API_URL = "https://api.data.gov.in/resource/ee03643a-ee4c-48c2-ac30-9f2ff26ab722";
-const API_KEY = "579b464db66ec23bdd00000142b05d03518241a36ef5e9be5942e767";
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 export const ALL_STATES = [
   "UTTAR PRADESH","MADHYA PRADESH","BIHAR","ASSAM","MAHARASHTRA","GUJARAT",

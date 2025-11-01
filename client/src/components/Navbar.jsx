@@ -5,7 +5,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="fixed top-4 left-0 right-0 z-30 flex justify-center px-4 animate-fadeIn">
+    <div className="fixed top-4 left-0 right-0 z-30 flex justify-center opacity-90 px-4 animate-fadeIn">
       <nav className="max-w-7xl w-full backdrop-blur-md bg-white/90 rounded-2xl shadow-2xl border-2 border-black/30 px-6 py-4">
         <div className="flex flex-wrap items-center justify-between">
           <Link to="/" className="flex items-center gap-3 animate-fadeIn">
@@ -47,7 +47,7 @@ const Navbar = () => {
               <li>
                 <Link
                   to="/"
-                  className="block py-2 px-4 text-2xl rounded-lg hover:bg-black/10 transition-colors"
+                  className="block py-2 px-4 text-2xl rounded-lg hover:underline hover:bg-black/ transition-colors"
                 >
                   Home
                 </Link>
@@ -63,7 +63,7 @@ const Navbar = () => {
               <li>
                 <Link
                   to="/dashboard"
-                  className="block py-2 px-4 text-2xl rounded-lg hover:bg-black/10 transition-colors"
+                  className="block py-2 px-4 text-2xl rounded-lg hover:bg-black/ hover:underline transition-colors"
                 >
                    View Dashboard
                 </Link>

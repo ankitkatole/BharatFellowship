@@ -71,7 +71,7 @@ const HomeView = () => {
             Explore rural employment insights with clarity. MGNREGA data visualized for everyone.
           </p>
           <button
-            onClick={() => navigate("/about")}
+            onClick={() => navigate("/dashboard")}
             className="mt-8 font-momo inline-block rounded-md border-2 border-black px-12 py-4 text-2xl text-black shadow-lg transition-all duration-300 hover:scale-105 hover:bg-black hover:text-beige"
           >
             Learn More
