@@ -9,7 +9,7 @@ const Navbar = () => {
       <nav className="max-w-7xl w-full backdrop-blur-md bg-white/90 rounded-2xl shadow-2xl border-2 border-black/30 px-6 py-4">
         <div className="flex flex-wrap items-center justify-between">
           <Link to="/" className="flex items-center gap-3 animate-fadeIn">
-            <img src="src/assets/navbar.png" className="h-16 w-16 rounded-lg" alt="Logo" />
+            <img src="navbar.png" className="h-16 w-16 rounded-lg" alt="Logo" />
             <span className="font-momo text-3xl text-black">
               MGNREGA Districtwise Dashboard
             </span>
