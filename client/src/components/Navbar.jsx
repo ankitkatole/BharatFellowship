@@ -10,7 +10,7 @@ const Navbar = () => {
         <div className="flex flex-wrap items-center justify-between">
           <Link to="/" className="flex items-center gap-3 animate-fadeIn">
             <img src="src/assets/navbar.png" className="h-16 w-16 rounded-lg" alt="Logo" />
-            <span className="font-momo text-3xl tracking-tight text-black">
+            <span className="font-momo text-3xl text-black">
               MGNREGA Districtwise Dashboard
             </span>
           </Link>
@@ -43,7 +43,7 @@ const Navbar = () => {
             className={`${isOpen ? 'flex' : 'hidden'} w-full md:flex md:w-auto`}
             id="navbar-menu"
           >
-            <ul className="flex flex-col  p-4 md:p-0 mt-4 font-bold md:space-x-6 rtl:space-x-reverse md:flex-row md:mt-0 text-black">
+            <ul className="flex flex-col font-momo p-4 md:p-0 mt-4 md:space-x-6 rtl:space-x-reverse md:flex-row md:mt-0 text-black">
               <li>
                 <Link
                   to="/"
