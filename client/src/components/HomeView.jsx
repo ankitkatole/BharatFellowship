@@ -6,7 +6,7 @@ const BlinkingCursor = () => (
   <span className="inline-block w-2 h-10 sm:h-14 lg:h-16 ml-2 bg-cyan-600 animate-blink"></span>
 );
 
-const PHRASES = ["Visualize Data.", "Track Progress.", "Understand Impact."];
+const PHRASES = ["Your Country, Your Data.", "Track Progress.", "Understand Impact."];
 
 const Typewriter = () => {
   const [currentText, setCurrentText] = useState("");

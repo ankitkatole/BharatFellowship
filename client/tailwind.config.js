@@ -9,9 +9,12 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        // Add Inter as the base sans-serif font
+        sans: ['Inter', 'sans-serif'],
         custom: ['Momo Trust Display', 'sans-serif'], 
         lobster: ['"Lobster Two"', 'sans-serif'],
-
+        // Keep your custom font, but use 'sans' as the default
+        momo: ['Momo Trust Display', 'sans-serif'], 
       },
       colors: {
         beige: '#F5F5DC',
